@@ -1,0 +1,136 @@
+Metadata-Version: 2.1
+Name: pupygrib
+Version: 0.7.0
+Summary: A light-weight pure Python GRIB reader
+Home-page: https://gitlab.com/gorilladev/pupygrib
+Author: Mattias Jakobsson
+Author-email: mattias.jakobsson@smhi.se
+License: UNKNOWN
+Keywords: grib grid data meteorology
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Scientific/Engineering :: Atmospheric Science
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Programming Language :: Python :: 3
+Classifier: Typing :: Typed
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+
+# Pupygrib
+
+Pupygrib (pronounced *puppy grib* and short for PUre PYthon GRIB) is a
+light-weight pure Python GRIB reader.  It's purpose is to extract data
+from GRIB files with as little effort as possible.  The user can then
+freely choose how to further process the data (*read: pupygrib will
+not help you*).
+
+
+## Features
+
+This project is in the alpha phase, which means that many planned
+features are missing and implemented features are not well tested.  It
+also means that the API may change in future version.  The implemented
+features are:
+
+* Iterate over and extract the raw fields from GRIB edition 1 messages
+  in a file.
+* Extract simply packed grid-point data values from GRIB edition 1
+  messages.
+* Extract the coordinates for these values if they are on a
+  latitude/longitude grid.
+
+The planned features are:
+
+* Be able to easily identify (filter) the messages.
+* Be able to extract the data values for other packings.
+* Be able to extract the coordinates of other grid types.
+* Support for GRIB edition 2.
+
+
+## Requirements
+
+* [Python](https://www.python.org) 3.6 or later (3.6-3.9 are tested).
+  3.8 or later is recommended for the better typing support.
+* [Numpy](http://www.numpy.org) 1.12-1.19 are tested with compatible
+  Python versions.
+
+
+## Installation
+
+```console
+$ pip install pupygrib
+```
+
+
+## Usage
+
+To use pupygrib, you will need a good understanding of the GRIB
+format, especially since table lookups are not yet implemented.  ECMWF
+provides an overview of GRIB
+[edition 1](http://apps.ecmwf.int/codes/grib/format/grib1/overview)
+and
+[edition 2](http://apps.ecmwf.int/codes/grib/format/grib2/overview)
+that can be used as references.
+
+Iterate over the messages in a GRIB file and extract the time,
+coordinates and values:
+
+``` python
+>>> import pupygrib
+>>> with open('tests/data/regular_latlon_surface.grib1', 'rb') as stream:
+...     for i, msg in enumerate(pupygrib.read(stream), 1):
+...         lons, lats = msg.get_coordinates()
+...         time = msg.get_time()
+...         values = msg.get_values()
+...         print("Message {}: {} {:.3f} {}".format(i, time, values.mean(), lons.shape))
+...
+Message 1: 2008-02-06 12:00:00 291.585 (31, 16)
+
+```
+
+Access a section of a GRIB message and print its fields:
+
+``` python
+>>> with open('tests/data/regular_latlon_surface.grib1', 'rb') as stream:
+...     msg, = pupygrib.read(stream)
+>>> sorted(msg.is_.fieldnames)  # fieldnames is a set, so we can't trust the order
+['editionNumber', 'identifier', 'totalLength']
+>>> msg[0].totalLength
+1100
+>>> msg.bitmap is None  # the bit-map section is not included in this message
+True
+
+```
+
+
+## Development
+
+Pull requests (against the `develop` branch) are most welcome!  I do
+ask that you add test cases and update the documentation (this README
+for now) for any new features.  Run the code through the
+auto-formatters [black][] and [isort][] and make sure that all checks
+(coding style, static type check, unit tests, and the
+[manifest](MANIFEST.in)) pass without any warnings or errors.  The
+easiest way to do this is to install the requirements in
+[requirements/dev.txt](requirements/dev.txt) and run [nox][]:
+
+```console
+$ pip install -r requirements/dev.txt
+$ nox
+```
+
+[black]: https://black.readthedocs.io/en/stable/
+[isort]: https://pycqa.github.io/isort/
+[nox]: https://nox.thea.codes/
+
+
+## License
+
+Pupygrib is being developed by
+[Mattias Jakobsson](mailto:mattias.jakobsson@smhi.se) at
+[SMHI](http://www.smhi.se).  It is released under the
+[GNU General Public License v3](LICENSE.txt) or later (GPLv3+).
+
+
