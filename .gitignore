@@ -1,0 +1,11 @@
+venv/
+data/
+omar_data/
+erosion_data/
+**.grib
+**.png
+conda
+.ipynb_checkpoints/
+**.xlsx
+other_data/
+**/__pycache__
