@@ -8,7 +8,6 @@ from tqdm import tqdm
 PATH = 'omar_data/'
 
 
-
 def extract_files_and_delete_gz(files: List[str]):
 
     def _extract_file(filepath):
@@ -21,8 +20,7 @@ def extract_files_and_delete_gz(files: List[str]):
             if file.endswith('.gz'):
                 _extract_file(PATH + file)
                 os.remove(PATH + file)
-                continue
-            if not file.endswith('.grb'):
+            elif not file.endswith('.grb'):
                 print(file)
             t.update(1)
 
