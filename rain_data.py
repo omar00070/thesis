@@ -94,25 +94,21 @@ def get_rain_excel_data():
             df.to_excel(OUTPUT_FILE)  
             print('successfully created the excel file!')
 
-    _, dirs = get_files_dirs(PATH)
-    for directory in dirs:
-        print('processing directory {} out of {}'.format(dirs.index(directory) + 1, len(dirs)))
-        directory_path = PATH + directory
-        files, _ = get_files_dirs(directory_path)
-        # Iterate over all the grib files in the directory path
-        with tqdm(total=len(files)) as t:
-            data_rows = []
-            for i in range(len(files)):
-                file = files[i]
-                file_path = '{}/{}'.format(directory_path, file)
-                data_row = get_inst_rain_average(file_path)
-                data_rows.append(data_row)
-                if i % 50 == 0 or i == len(files):
-                    _update_dataframe_file(data_rows)
-                    _send_email(i + 1, len(files))
-                    data_rows = []
-                    
-                t.update(1)
+    files, _ = get_files_dirs(PATH)
+    # Iterate over all the grib files in the directory path
+    with tqdm(total=len(files)) as t:
+        data_rows = []
+        for i in range(len(files)):
+            file = files[i]
+            file_path = PATH + file
+            data_row = get_inst_rain_average(file_path)
+            data_rows.append(data_row)
+            if i % 50 == 0 or i == len(files):
+                _update_dataframe_file(data_rows)
+                _send_email(i + 1, len(files))
+                data_rows = []
+                
+            t.update(1)
 
 
 if __name__ == "__main__":
