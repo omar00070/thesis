@@ -23,7 +23,5 @@ def extract_files_and_delete_gz(files: List[str]):
             t.update(1)
 
 if __name__ == '__main__':
-    _, dirs = get_files_dirs(PATH)
-    for _dir in dirs:
-        files, _ = get_files_dirs(PATH + _dir)
-        extract_files_and_delete_gz(files)
+    files, dirs = get_files_dirs(PATH)
+    extract_files_and_delete_gz(files)
