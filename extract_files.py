@@ -3,7 +3,7 @@ import shutil
 from typing import List
 import os
 from helpers.helpers import get_files_dirs
-import tqdm
+from tqdm import tqdm
 
 PATH = 'omar_data/'
 
