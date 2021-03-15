@@ -18,9 +18,14 @@ def extract_files_and_delete_gz(files: List[str]):
     
     with tqdm(total=len(files)) as t:
         for file in files:
-            _extract_file(PATH + file)
-            os.remove(PATH + file)
+            if file.endswith('.gz'):
+                _extract_file(PATH + file)
+                os.remove(PATH + file)
+                continue
+            if not file.endswith('.grb'):
+                print(file)
             t.update(1)
+
 
 if __name__ == '__main__':
     files, dirs = get_files_dirs(PATH)
