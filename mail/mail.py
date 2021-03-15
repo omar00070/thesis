@@ -34,9 +34,3 @@ class Email:
         session.sendmail(self.sender, self.receiver, text)
         session.quit()
         print('Mail Sent')
-
-
-#The mail addresses and password
-
-# email = Email(sender_address, receiver_address, sender_pass)
-# email.send_mail('something', 'some subject')

@@ -72,7 +72,6 @@ def get_inst_rain_average(file_path: str) -> Dict[str, float]:
         data_row[area['name'] + '_average'] = average
         data_row[area['name'] + '_min'] = min(data)
         data_row[area['name'] + '_max'] = max(data)
-    print(data_row)
     return data_row
     
 def get_rain_excel_data():
@@ -128,7 +127,6 @@ def get_rain_excel_data():
                     _send_email(i + 1, len(files))
                     data_rows = []
                     
-                print(data_row)
                 t.update(1)
 
 
