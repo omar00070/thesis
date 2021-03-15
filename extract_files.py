@@ -11,15 +11,15 @@ PATH = 'omar_data/'
 
 def extract_files_and_delete_gz(files: List[str]):
 
-    def _extract_file(filename):
-        with gzip.open(filename, 'rb') as f_in:
-            with open(filename[:-2], 'wb') as f_out:
+    def _extract_file(filepath):
+        with gzip.open(filepath, 'rb') as f_in:
+            with open(filepath[:-3], 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
     
     with tqdm(total=len(files)) as t:
         for file in files:
-            _extract_file(file)
-            os.remove(file)
+            _extract_file(PATH + file)
+            os.remove(PATH + file)
             t.update(1)
 
 if __name__ == '__main__':
