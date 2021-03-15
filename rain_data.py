@@ -1,12 +1,13 @@
 from typing import Dict, List
 import pygrib
 import numpy as np
-from os import walk, environ
+from os import environ
 from tqdm import tqdm
 import pandas as pd
 import json
 from mail import Email
 from time import sleep
+from helpers.helpers import get_files_dirs
 
 # script to get the average rain max rain and min rain for areas defined in areas.json file from GRIB files
 
@@ -35,22 +36,6 @@ email = Email(sender_address, receiver_address, sender_pass)
 
 print('found {} areas in areas.json file'.format(len(AREAS)))
 print('---------------------------------')
-
-
-def _get_files_dirs(path: str) -> List[str]:
-    '''
-        get all the files in a directory path
-        :param path:    path to the files or directories
-        :return:        list of files, list of direcotries in the path
-    '''
-    f = []
-    dirs = []
-    for (_, dirnames, filenames) in walk(path):
-        f.extend(filenames)
-        dirs.extend(dirnames)
-        break
-    return f, dirs
-
 
 def get_inst_rain_average(file_path: str) -> Dict[str, float]:
     '''
@@ -109,11 +94,11 @@ def get_rain_excel_data():
             df.to_excel(OUTPUT_FILE)  
             print('successfully created the excel file!')
 
-    _, dirs = _get_files_dirs(PATH)
+    _, dirs = get_files_dirs(PATH)
     for directory in dirs:
         print('processing directory {} out of {}'.format(dirs.index(directory) + 1, len(dirs)))
         directory_path = PATH + directory
-        files, _ = _get_files_dirs(directory_path)
+        files, _ = get_files_dirs(directory_path)
         # Iterate over all the grib files in the directory path
         with tqdm(total=len(files)) as t:
             data_rows = []
