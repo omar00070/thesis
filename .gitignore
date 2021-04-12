@@ -1,6 +1,7 @@
 venv/
 data/
 omar_data/
+rain_data/
 erosion_data/
 **.grib
 **.png
